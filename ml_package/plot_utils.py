@@ -165,9 +165,36 @@ def plot_confusion_matrix_plotly(y_true, y_pred, classes, title="Confusion Matri
     Returns a Plotly figure for confusion matrix.
     """
     from sklearn.metrics import confusion_matrix
-    labels = sorted(set(list(y_true) + list(y_pred)))
-    cm = confusion_matrix(y_true, y_pred, labels=labels)
+    import pandas as pd
+    import numpy as np
+ 
+    
+    y_true = pd.Series(y_true).reset_index(drop=True)
+    y_pred = pd.Series(y_pred).reset_index(drop=True)
+ 
+    
+    mask = y_true.notna() & y_pred.notna()
+    y_true = y_true[mask]
+    y_pred = y_pred[mask]
+ 
+    
+    y_true = y_true.astype(str)
+    y_pred = y_pred.astype(str)
+ 
+    
+    labels = sorted(set(y_true.tolist()) | set(y_pred.tolist()))
     str_labels = [str(l) for l in labels]
+ 
+    
+    cm = confusion_matrix(y_true, y_pred, labels=labels)
+ 
+    
+    if cm.shape[0] != len(str_labels):
+        raise ValueError(
+            f"Shape mismatch: cm.shape={cm.shape}, len(labels)={len(str_labels)}, "
+            f"labels={labels}"
+        )
+ 
     fig = px.imshow(
         cm, text_auto=True,
         x=str_labels, y=str_labels,
@@ -175,6 +202,7 @@ def plot_confusion_matrix_plotly(y_true, y_pred, classes, title="Confusion Matri
     )
     fig.update_layout(xaxis_title="Predicted", yaxis_title="Observed")
     return fig
+ 
 
 
 def plot_metrics_summary(res_df: pd.DataFrame, task_type: str):
