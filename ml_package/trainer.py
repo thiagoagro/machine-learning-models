@@ -380,9 +380,20 @@ def run_training_pipeline(
     X_scaled, _ = features.scale_features(X, method=scaler_option)
 
     # ── 3. Split ─────────────────────────────────────────────────────────────
-    X_train, X_test, y_train, y_test = train_test_split(
-        X_scaled, y, test_size=test_size, random_state=42
-    )
+    if task_type == "Classification":
+        try:
+            X_train, X_test, y_train, y_test = train_test_split(
+                X_scaled, y, test_size=test_size, random_state=42, stratify=y
+            )
+        except ValueError:
+            # Fallback: class too rare to stratify (< 2 samples)
+            X_train, X_test, y_train, y_test = train_test_split(
+                X_scaled, y, test_size=test_size, random_state=42
+            )
+    else:
+        X_train, X_test, y_train, y_test = train_test_split(
+            X_scaled, y, test_size=test_size, random_state=42
+        )
 
     # ── 4. Model dictionary ──────────────────────────────────────────────────
     if task_type == "Regression":
@@ -509,6 +520,12 @@ def run_training_pipeline(
     if sort_col in results_df.columns:
         results_df = results_df.sort_values(by=sort_col, ascending=False)
 
+    if not predictions_list:
+        raise ValueError(
+            "All models failed to train. Possible causes: target column has only one "
+            "class represented in the test set, or too few samples for cross-validation. "
+            "Check that your dataset has at least ~30 rows and the target has multiple classes."
+        )
     final_preds_df = pd.concat(predictions_list, ignore_index=True)
     return results_df, final_preds_df, trained_models, optuna_studies
 

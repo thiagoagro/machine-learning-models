@@ -26,8 +26,11 @@ def evaluate_classification(y_true, y_pred, y_proba=None, n_classes=2, average='
         'F1': f1_score(y_true, y_pred, average=average, zero_division=0),
     }
     if y_proba is not None:
-        if n_classes == 2:
-            metrics['ROC_AUC'] = roc_auc_score(y_true, y_proba[:, 1])
-        else:
-            metrics['ROC_AUC'] = roc_auc_score(y_true, y_proba, multi_class='ovr')
+        try:
+            if n_classes == 2:
+                metrics['ROC_AUC'] = roc_auc_score(y_true, y_proba[:, 1])
+            else:
+                metrics['ROC_AUC'] = roc_auc_score(y_true, y_proba, multi_class='ovr')
+        except ValueError:
+            pass  # single class in split — skip ROC_AUC
     return metrics
