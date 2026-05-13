@@ -408,7 +408,7 @@ def run_training_pipeline(
     else:
         model_dict = models.get_classification_models()
         n_classes = len(np.unique(y))
-        avg_method = "binary" if n_classes == 2 else "weighted"
+        avg_method = "weighted"
 
     if selected_models:
         model_dict = {k: v for k, v in model_dict.items() if k in selected_models}
