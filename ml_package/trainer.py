@@ -321,7 +321,11 @@ def _run_optuna(model, model_name: str, X_train, y_train, task_type: str, n_tria
         m = clone(model)
         m.set_params(**params)
         scoring = "r2" if task_type == "Regression" else "accuracy"
-        scores = cross_val_score(m, X_train, y_train, cv=3, scoring=scoring, n_jobs=-1)
+        cv_folds = min(3, len(X_train))
+        scores = cross_val_score(
+            m, X_train, y_train, cv=cv_folds, scoring=scoring,
+            n_jobs=-1, error_score=0.0,
+        )
         return float(scores.mean())
 
     study = optuna.create_study(
@@ -331,8 +335,11 @@ def _run_optuna(model, model_name: str, X_train, y_train, task_type: str, n_tria
     study.optimize(objective, n_trials=n_trials, show_progress_bar=False)
 
     best_model = clone(model)
-    if study.best_params:
-        best_model.set_params(**study.best_params)
+    try:
+        if study.best_params:
+            best_model.set_params(**study.best_params)
+    except ValueError:
+        pass  # all trials failed — fit with default params
     best_model.fit(X_train, y_train)
     return best_model, study
 
@@ -434,8 +441,11 @@ def run_training_pipeline(
                         model, study = _run_optuna(
                             model, name, X_train, y_train, task_type, n_trials
                         )
-                        if study is not None and study.best_params:
-                            optuna_studies[name] = study
+                        try:
+                            if study is not None and study.best_params:
+                                optuna_studies[name] = study
+                        except ValueError:
+                            pass  # no completed trials — skip study storage
                 else:
                     model.fit(X_train, y_train)
 
