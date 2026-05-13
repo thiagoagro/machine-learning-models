@@ -165,9 +165,15 @@ def plot_confusion_matrix_plotly(y_true, y_pred, classes, title="Confusion Matri
     Returns a Plotly figure for confusion matrix.
     """
     from sklearn.metrics import confusion_matrix
-    cm = confusion_matrix(y_true, y_pred)
-    fig = px.imshow(cm, text_auto=True, x=classes, y=classes, color_continuous_scale='Blues', title=title)
-    fig.update_layout(xaxis_title="Predito", yaxis_title="Real")
+    labels = sorted(set(list(y_true) + list(y_pred)))
+    cm = confusion_matrix(y_true, y_pred, labels=labels)
+    str_labels = [str(l) for l in labels]
+    fig = px.imshow(
+        cm, text_auto=True,
+        x=str_labels, y=str_labels,
+        color_continuous_scale="Blues", title=title,
+    )
+    fig.update_layout(xaxis_title="Predicted", yaxis_title="Observed")
     return fig
 
 
