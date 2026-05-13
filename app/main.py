@@ -415,6 +415,48 @@ def main():
         return
 
     df = data_processor.load_data(uploaded_file)
+
+    # ── NaN handling ─────────────────────────────────────────────────────────
+    _file_key = f"_nan_clean_{uploaded_file.name}_{uploaded_file.size}"
+    nan_counts = df.isnull().sum()
+    nan_cols = nan_counts[nan_counts > 0]
+
+    if len(nan_cols) > 0:
+        if _file_key in st.session_state:
+            df = st.session_state[_file_key]
+        else:
+            st.warning(
+                f"**Missing values detected** in {len(nan_cols)} column(s). "
+                "Choose how to handle them before proceeding."
+            )
+            c_tbl, c_act = st.columns([1, 1])
+            with c_tbl:
+                st.markdown("**Columns with missing values:**")
+                st.dataframe(
+                    nan_cols.rename("Missing count").to_frame(),
+                    use_container_width=True,
+                )
+            with c_act:
+                nan_strategy = st.radio(
+                    "Strategy",
+                    [
+                        "Replace with column median",
+                        "Drop rows with any missing value",
+                    ],
+                    key="nan_strategy",
+                )
+                if st.button("Apply and continue ▶", type="primary", key="apply_nan"):
+                    if nan_strategy == "Replace with column median":
+                        df = df.fillna(df.median(numeric_only=True))
+                    else:
+                        df = df.dropna()
+                    st.session_state[_file_key] = df
+                    st.rerun()
+                else:
+                    st.stop()
+    else:
+        st.session_state.pop(_file_key, None)
+
     st.sidebar.success(f"Loaded: {df.shape[0]} rows × {df.shape[1]} columns")
 
     eda_b64   = _img_b64("eda_icon.png")
