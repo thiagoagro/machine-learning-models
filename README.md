@@ -20,7 +20,7 @@ Whether you are a researcher, a business analyst with no coding experience, or a
 3. **Automated Model Training (AutoML)**
    - Supports both **Regression** and **Classification** tasks.
    - Dynamic selection from a vast dictionary of algorithms (Random Forest, XGBoost, SVM, Gradient Boosting, LightGBM, Neural Networks, etc.).
-   - Built-in **Hyperparameter Tuning** via `RandomizedSearchCV`.
+   - Built-in **Hyperparameter Tuning** via `RandomizedSearchCV` and `Optuna`.
    - Scalability options (`StandardScaler`, `MinMaxScaler`, `RobustScaler`).
 
 4. **Visual Performance & Reporting**
@@ -74,7 +74,7 @@ ML_Project/
 To start the interactive interface, run the following command in your terminal:
 
 ```bash
-streamlit run app/main.py
+streamlit run main.py
 ```
 
 ### User Workflow in the App:
