@@ -1,0 +1,71 @@
+[theme]
+# Spotify theme
+base = "dark"
+
+# Main color= green
+primaryColor = "#1DB954"
+
+# Background
+backgroundColor = "#050505"
+
+# cards, widgets, containers e inputs
+secondaryBackgroundColor = "#181818"
+
+# Text colors
+textColor = "#FFFFFF"
+
+# Font
+font = "sans-serif"
+headingFont = "sans-serif"
+codeFont = "monospace"
+
+# Fontsize base
+baseFontSize = 18
+
+# Local Borders
+baseRadius = "1rem"
+buttonRadius = "full"
+
+# Borders
+borderColor = "#2A2A2A"
+showWidgetBorder = true
+showSidebarBorder = true
+
+# Dataframes
+dataframeBorderColor = "#2A2A2A"
+dataframeHeaderBackgroundColor = "#121212"
+
+# Links
+linkColor = "#1ED760"
+linkUnderline = false
+
+# Graphs colors
+chartCategoricalColors = [
+    "#1DB954",
+    "#1ED760",
+    "#B3B3B3",
+    "#FFFFFF",
+    "#535353",
+    "#A7F3D0",
+    "#22C55E"
+]
+
+chartSequentialColors = [
+    "#051B0A",
+    "#0B3D16",
+    "#126622",
+    "#1DB954",
+    "#1ED760",
+    "#A7F3D0"
+]
+
+
+[theme.sidebar]
+# Sidebar escura estilo painel SaaS
+backgroundColor = "#000000"
+secondaryBackgroundColor = "#121212"
+textColor = "#FFFFFF"
+primaryColor = "#1DB954"
+borderColor = "#242424"
+linkColor = "#1ED760"
+linkUnderline = false
