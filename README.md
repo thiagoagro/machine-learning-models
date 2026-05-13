@@ -1,6 +1,6 @@
 # Automated Machine Learning Platform
 
-Welcome to the **Automated Machine Learning SaaS Platform**, an end-to-end ecosystem designed to democratize Machine Learning. This project features a robust Python package (`ml_package`) for data processing and model training, accompanied by a sleek, interactive web interface powered by **Streamlit**. 
+Welcome to the **Automated Machine Learning Platform**, an end-to-end ecosystem designed to democratize Machine Learning. This project features a robust Python package (`ml_package`) for data processing and model training, accompanied by a sleek, interactive web interface powered by **Streamlit**. 
 
 Whether you are a researcher, a business analyst with no coding experience, or a data scientist looking to speed up your pipeline, this platform has you covered.
 
